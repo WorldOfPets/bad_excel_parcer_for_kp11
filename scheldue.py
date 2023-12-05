@@ -20,8 +20,9 @@ class ScheldueInit:
         self.ws = self.wb.active
         self.skip_arr = ["1 пара", "2 пара", "3 пара", "4 пара", "5 пара"]
         self.data_group = []
+        self.row_group = self.__get_group_row()
         for gr in range(1, self.ws.max_column - 1):
-            val = self.ws.cell(row=5, column=gr).value
+            val = self.ws.cell(row=self.row_group, column=gr).value
             if val is not None:
                 data_group_id = f"{val} ! {gr}"
                 self.data_group.append(data_group_id)
@@ -203,7 +204,12 @@ class ScheldueInit:
     def __repeat(self) -> bool:
         return input("Continue?[y/n]") == "y"
 
-
+    def __get_group_row(self):
+        for i in range(1, self.ws.max_row - 1):
+            for j in range(1, self.ws.max_column - 1):
+                val = self.ws.cell(row=i, column=j).value
+                if "ИСиП" in str(val):
+                    return i
     def __get_group_name(self, index: int):
         for group in self.data_group:
             if "!" in str(group):
